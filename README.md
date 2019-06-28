@@ -1,7 +1,9 @@
 # RumenLongReadASM
+![DOI](https://zenodo.org/badge/159530113.svg)
+---
 Scripts, notes and commands to accompany our Rumen Metagenome assembly manuscript
 
-All files are provided as-is in the hopes that they would be useful for ongoing work.
+All files are provided as-is in the hopes that they would be useful for ongoing work. Many of the utilities in this repository were used to identify links between rumen microbes and genetic features; however, they should be equally useful for the analysis of other prokaryotic metagenomics communities.
 
 ## Viral (or mobile DNA) link analysis
 
