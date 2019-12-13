@@ -193,12 +193,16 @@ class viralComparison:
         # Set viral node styles
         for i in range(len(vgenus.keys())):
             k = vgenus.keys()[i]
+            if i >= 5:
+                i = 4
             print(f'Viral Genus {k} color: {vcolors[i]}')
             nx.draw_networkx_nodes(graph, pos, nodelist=vgenus[k], node_color=vcolors[i], alpha=0.8, node_size=500, node_shape='8')
         
         # Set host node styles
         for i in range(len(hking.keys())):
             k = hking.keys()[i]
+            if i >= 3:
+                i = 2
             print(f'Host kingdom {k} color: {hcolors[i]}')
             nx.draw_networkx_nodes(graph, pos, nodelist=hking[k], node_color=hcolors[i], alpha=0.8, node_size=400, node_shape='o')
             
