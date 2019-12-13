@@ -13,6 +13,10 @@ import sys
 from collections import defaultdict
 import numpy as np
 #import scipy.cluster.vq as sp
+import networkx as nx
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 def parse_user_input():
     parser = argparse.ArgumentParser(
@@ -133,6 +137,10 @@ def main(args):
     # Print out the final table
     workhorse.printOutFinalTable(args.output + '.final.tab')
     
+    # By default, try to plot in a network
+    if not args.noplot:
+        workhorse.generatePlot(args.output + '.nxplot.png')
+    
 class viralComparison:
 
     def __init__(self, viralCtgFile : str):
@@ -159,6 +167,48 @@ class viralComparison:
         
     def isVirus(self, ctg : str):
         return ctg in self.viruses
+    
+    def generatePlot(self, outfile : str):
+        vcolors = ['b', 'g', 'r', 'c', 'y']
+        hcolors = ['m', 'w', 'k']
+        ecolors = {"Read" : 'b', "HiC" : 'y', "Both" : 'g'}
+        graph = nx.Graph()
+        vgenus = defaultdict(list)
+        hking = defaultdict(list)
+        ecat = defaultdict(list)
+        for v in self.finalTable:
+                for h in self.finalTable[v]:
+                    working = self.finalTable[v][h].getListOutput()
+                    graph.add_node(working[0])
+                    graph.add_node(working[1])
+                    vgenus[working[3]].append(working[0])
+                    hking[working[4]].append(working[1])
+                    graph.add_edge((working[0], working[1]))
+                    ecat[working[2]].append((working[0], working[1]))
+        
+        pos = nx.spring_layout(graph)
+        # Set viral node styles
+        for i in range(len(vgenus.keys())):
+            k = vgenus.keys()[i]
+            print(f'Viral Genus {k} color: {vcolors[i]}')
+            nx.draw_networkx_nodes(graph, pos, nodelist=vgenus[k], node_color=vcolors[i], alpha=0.8, node_size=500, node_shape='8')
+        
+        # Set host node styles
+        for i in range(len(hking.keys())):
+            k = hking.keys()[i]
+            print(f'Host kingdom {k} color: {hcolors[i]}')
+            nx.draw_networkx_nodes(graph, pos, nodelist=hking[k], node_color=hcolors[i], alpha=0.8, node_size=400, node_shape='o')
+            
+        # Set edge styles
+        for k, v in ecolors.items():
+            if not k in ecat:
+                print(f'Houston, we have a problem with cat: {k}')
+                continue
+            nx.draw_networkx_edges(graph, pos, edgelist=ecat[k], width=2, alpha=0.6, edge_color=ecolors[k])
+            
+        plt.axis('off')
+        plt.savefig(outfile)
+
     
     def printOutFinalTable(self, outtab : str):
         print("Final associations in table {}".format(outtab))
@@ -188,7 +238,7 @@ class viralComparison:
                     continue
                 elif line.startswith("#"):
                     line = line.rstrip()
-                    segs = line.split()
+                    segs = line.split(sep="\t")
                     for i in range(len(segs)):
                         if segs[i].startswith("genus.t"):
                             genusidx = i
@@ -201,7 +251,7 @@ class viralComparison:
             
             for l in input.readlines():
                 l = l.rstrip()
-                segs = l.split()
+                segs = l.split(sep="\t")
                 if segs[0] in contigs:
                     taxonomy[segs[0]] = [segs[kingidx], segs[genusidx]]
         
