@@ -8,6 +8,7 @@ Python Version 3.6+
 """
 
 import argparse
+import re
 import subprocess
 import sys
 from collections import defaultdict
@@ -17,6 +18,8 @@ import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+rundef = re.compile(r'-undef')
 
 def parse_user_input():
     parser = argparse.ArgumentParser(
@@ -183,7 +186,7 @@ class viralComparison:
                     graph.add_node(working[1])
                     vgenus[working[3]].append(working[0])
                     hking[working[4]].append(working[1])
-                    graph.add_edge((working[0], working[1]))
+                    graph.add_edge(working[0], working[1])
                     ecat[working[2]].append((working[0], working[1]))
         
         pos = nx.spring_layout(graph)
@@ -253,6 +256,8 @@ class viralComparison:
                 l = l.rstrip()
                 segs = l.split(sep="\t")
                 if segs[0] in contigs:
+                    segs[kingidx] = rundef.sub('', segs[kingidx])
+                    segs[genusidx] = rundef.sub('', segs[genusidx])
                     taxonomy[segs[0]] = [segs[kingidx], segs[genusidx]]
         
         # Now assign tax affiliations to the contigs
@@ -366,6 +371,8 @@ class viralComparison:
         with open(outfasta, 'w') as fasta:
             container = list()
             for k, f in self.ovlpEC.items():
+                if f[1] - f[0] < 2:
+                    continue
                 container.append(f'{k}:{f[0]}-{f[1]}')
                 if len(container) >= 100:
                     self.samfaidx(samtools, ecReads, container, fasta)
