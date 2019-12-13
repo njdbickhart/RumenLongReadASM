@@ -192,7 +192,7 @@ class viralComparison:
         pos = nx.spring_layout(graph)
         # Set viral node styles
         for i in range(len(vgenus.keys())):
-            k = vgenus.keys()[i]
+            k = list(vgenus.keys())[i]
             if i >= 5:
                 i = 4
             print(f'Viral Genus {k} color: {vcolors[i]}')
@@ -200,7 +200,7 @@ class viralComparison:
         
         # Set host node styles
         for i in range(len(hking.keys())):
-            k = hking.keys()[i]
+            k = list(hking.keys())[i]
             if i >= 3:
                 i = 2
             print(f'Host kingdom {k} color: {hcolors[i]}')
