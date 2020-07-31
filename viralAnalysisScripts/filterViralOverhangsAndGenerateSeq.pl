@@ -2,7 +2,7 @@
 # This is the follow-up script that can be used to filter long-read viral overhangs and to generate a fasta file for realignment
 
 use strict;
-my $usage = "perl $0 <input viral overhang bed> <original error-corrected read fasta> <bp threshold for filtering> <output filtered fasta>\n"
+my $usage = "perl $0 <input viral overhang bed> <original error-corrected read fasta> <bp threshold for filtering> <output filtered fasta>\n";
 
 chomp(@ARGV);
 
