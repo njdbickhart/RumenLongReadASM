@@ -13,7 +13,7 @@ unless(scalar(@ARGV) == 4){
 
 if( -s $ARGV[3]){
 	print "Delete existing subread fasta file: $ARGV[3] [y/n]?\n";
-	my $decision = STDIN;
+	my $decision = <STDIN>;
 	if($decision =~ /^y/){
 		print "Deleting...\n";
 		system("rm $ARGV[3]");

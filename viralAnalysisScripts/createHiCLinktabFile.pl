@@ -28,7 +28,7 @@ while(my $line = <$IN>){
 	if(exists($ctgset{$segs[2]})){
 		# We only count one pair of the links to avoid redundancy!
 		if($segs[6] ne $segs[2]){
-			$assocHash{$segs[2]}->{$segs[6} += 1;
+			$assocHash{$segs[2]}->{$segs[6]} += 1;
 		}
 	}
 }
