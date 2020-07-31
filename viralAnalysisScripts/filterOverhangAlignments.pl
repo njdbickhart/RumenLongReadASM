@@ -34,7 +34,7 @@ close $IN;
 
 open(my $OUT, "> $ARGV[2]");
 foreach my $keys (keys(%data)){
-	if(scalar(@{$data{$keys}}) > 2)){
+	if(scalar(@{$data{$keys}}) > 2){
 		next; # too many mappings for this read!
 	}
 	print "$keys\t" . join("\t", @{$data{$keys}}) . "\n";
